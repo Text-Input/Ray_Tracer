@@ -18,10 +18,12 @@ use ray_tracer::material::lambertian::*;
 use ray_tracer::material::metal::*;
 use ray_tracer::material::dielectric::*;
 
+use std::time::{Instant};
+
 fn main() {
-	let width = 400*2;
-	let height = 200*2;
-	let samples = 100*2;
+	let width = 400;
+	let height = 200;
+	let samples = 100;
 	let seed: u64 = 0;
 	
 	let lookfrom = Vec3::new(13.0, 2.0, 3.0);
@@ -32,10 +34,13 @@ fn main() {
 	
 	let mut rng = SmallRng::seed_from_u64(seed);
 	let scene = random_scene(&mut rng);
+	//let scene = static_scene();
 
+	let time_start = Instant::now();
 
     let buf = ray_tracer::render(width, height, samples, cam, scene);
 
+	let time_end = Instant::now();
 
 	let mut buff = Vec::with_capacity(width*height*3);
 	for i in buf.iter(){
@@ -45,6 +50,8 @@ fn main() {
 	let imgbuf: ImageBuffer<image::Rgb::<u8>, Vec<u8>> = ImageBuffer::from_vec(width as u32, height as u32, buff).unwrap();
 	
 	imgbuf.save("out.png").unwrap();
+	
+	println!("it took {} seconds to render this image", time_end.duration_since(time_start).as_secs());
 }
 
 fn random_scene(rng: &mut SmallRng) -> HitableList{

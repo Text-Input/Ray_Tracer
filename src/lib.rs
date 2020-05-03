@@ -12,12 +12,14 @@ pub mod camera;
 mod util;
 pub mod material;
 pub mod hit;
+mod aabb;
 
 use colour::*;
 use ray::*;
 use camera::*;
 use hit::*;
 use hit::hitable_list::*;
+use hit::bvh::*;
 
 pub fn render(width: usize, height: usize, samples: usize,cam: Camera, world: HitableList) -> Vec<[u8;3]>{
 	let bar = ProgressBar::new((height*width) as u64);
@@ -25,6 +27,9 @@ pub fn render(width: usize, height: usize, samples: usize,cam: Camera, world: Hi
 					.progress_chars("=> "));
 	bar.set_draw_delta((height*width/1000) as u64);
 	
+	println!("building BVH!");
+	//let world = BvhNode::new(world.hitables);
+	//println!("BVH tree: {:#?}", world);
 	println!("Starting raytracing!");
 	
 	let buf: Vec<_> = (0..(width*height)).into_par_iter().map(|i| {	
@@ -63,7 +68,7 @@ pub fn render(width: usize, height: usize, samples: usize,cam: Camera, world: Hi
 }
 
 
-fn colour(r: &Ray, world: &dyn Hitable, depth: u32) -> Colour {
+pub fn colour(r: &Ray, world: &dyn Hitable, depth: u32) -> Colour {
 	match world.hit(r,0.001, f32::MAX) {
 		Some(record) => {
 			if depth < 50 {

@@ -2,9 +2,11 @@
 pub mod sphere;
 pub mod triangle;
 pub mod hitable_list;
+pub mod bvh;
 
 use super::vec3::*;
 use super::ray::*;
+use super::aabb::*;
 use super::material::*;
 
 
@@ -18,6 +20,7 @@ pub struct HitRecord<'a> {
 }
 
 //implemented by objects in the scene, so they can be hit by the rays.
-pub trait Hitable: Sync + Send {
+pub trait Hitable: Sync + Send + std::fmt::Debug{
 	fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
+	fn bounding_box(&self) -> Option<AABB>;
 }

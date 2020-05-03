@@ -2,6 +2,8 @@ use crate::vec3::*;
 use crate::ray::*;
 use crate::hit::*;
 
+
+#[derive(Debug)]
 pub struct Sphere{
 	center: Vec3,
 	radius: f32,
@@ -19,6 +21,7 @@ impl Sphere {
 }
 
 impl Hitable for Sphere {
+	//#[inline]
 	fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
 		let oc = r.origin() - self.center;
 		let a = r.direction().dot(r.direction());
@@ -50,5 +53,11 @@ impl Hitable for Sphere {
 		} 
 		None
 		
+	}
+	
+	fn bounding_box(&self) -> Option<AABB> {
+		Some(AABB::new(
+			self.center - Vec3::new(self.radius, self.radius, self.radius),
+			self.center + Vec3::new(self.radius, self.radius, self.radius)))
 	}
 }

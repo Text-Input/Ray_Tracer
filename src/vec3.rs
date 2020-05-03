@@ -1,6 +1,6 @@
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec3 {
 	x: f32, 
 	y: f32,
@@ -22,6 +22,17 @@ impl Vec3 {
 	}
 	pub fn z(&self) -> f32 {
 		self.z
+	}
+	
+	pub fn get(&self, index: usize) -> f32 {
+		if index == 0 {
+			return self.x;
+		} else if index == 1 {
+			return self.y;
+		} else if index == 2 {
+			return self.z;
+		}
+		panic!("Attempted to access Vec3 out of bounds with index: {} !", index);
 	}
 	
 	pub fn length(&self) -> f32 {

@@ -8,7 +8,7 @@ use super::ray::*;
 use super::hit::*;
 
 
-pub trait Material: Sync + Send {
+pub trait Material: Sync + Send  + std::fmt::Debug{
 	fn scatter(&self, r_in: &Ray, record: &HitRecord) -> Option<MaterialReturn>;
 }
 

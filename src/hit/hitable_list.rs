@@ -2,9 +2,9 @@
 
 use crate::hit::*;
 
-
+#[derive(Debug)]
 pub struct HitableList {
-	hitables: Vec<Box<dyn Hitable>>,
+	pub hitables: Vec<Box<dyn Hitable>>,
 }
 
 impl HitableList{
@@ -31,5 +31,32 @@ impl Hitable for HitableList {
 			}
 		}
 		rec
+	}
+	
+	fn bounding_box(&self) -> Option<AABB>{
+		if self.hitables.is_empty() {
+			return None
+		}
+		let mut temp_box = self.hitables[0].bounding_box();
+		//we account for the first box in temp_box, so we can skip in when iterating though the list.
+		for obj in self.hitables.iter().skip(1) { 
+			temp_box = match temp_box {
+				Some(temp) => {
+					match obj.bounding_box() {
+						Some(aa_box) => Some(AABB::surrounding_box(temp, aa_box)),
+						None => Some(temp),
+					}
+				},
+				None => {
+					match obj.bounding_box() {
+						Some(aa_box) => Some(aa_box),
+						None => None,
+					}
+				}
+				
+				
+			}
+		}
+		temp_box
 	}
 }

@@ -1,10 +1,11 @@
 
 use crate::vec3::*;
 use crate::ray::*;
+use crate::aabb::*;
 
 use super::*;
 
-// do we want to have triangles directly, or do we want to store them in some sort of mesh?
+// Do we want to have triangles directly, or do we want to store them in some sort of mesh?
 // if we could just store references to materials inside objects, I would be happy to have only
 // triangles, and no such thing as a mesh. However, using meshes would eliminate most benefits of 
 // the BVH (when using large meshes), as well as the fact that it would require significant refactoring
@@ -12,6 +13,7 @@ use super::*;
 // due to the fact that once we create an object with a reference to a vector, we cannot add any more elements to it due to 
 // it requiring a mutable reference).
 
+#[derive(Debug)]
 pub struct Triangle{
 	a: Vec3,
 	b: Vec3,
@@ -66,5 +68,20 @@ impl Hitable for Triangle{
 		} else {
 			None
 		}
+	}
+	
+	fn bounding_box(&self) -> Option<AABB> {
+		let a = self.a;
+		let b = self.b;
+		let c = self.c;
+		Some (AABB::new(
+			Vec3::new(a.x().min(b.x()).min(c.x()), //small 
+					  a.y().min(b.y()).min(c.y()),
+					  a.z().min(b.z()).min(c.z())), 
+					  
+			Vec3::new(a.x().max(b.x()).max(c.x()), // big
+					  a.y().max(b.y()).max(c.y()),
+					  a.z().max(b.z()).max(c.z())) ))
+		
 	}
 }
