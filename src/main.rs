@@ -32,9 +32,9 @@ fn main() {
 	let aperture = 0.1;
 	let cam = Camera::new(lookfrom, lookat, Vec3::new(0.0, 1.0, 0.0), 20.0, (width as f32) / (height as f32), aperture, dist_to_focus);
 	
-	let mut rng = SmallRng::seed_from_u64(seed);
-	let scene = random_scene(&mut rng);
-	//let scene = static_scene();
+	//let mut rng = SmallRng::seed_from_u64(seed);
+	//let scene = random_scene(&mut rng);
+	let scene = static_scene();
 
 	let time_start = Instant::now();
 
@@ -87,12 +87,15 @@ fn random_scene(rng: &mut SmallRng) -> HitableList{
 }
 
 fn static_scene() -> HitableList {
+
 	let world = HitableList::new(vec![
 		Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Box::new(Lambertian::new(Colour::new(0.1, 0.2, 0.5))))), 
 		Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Box::new(Lambertian::new(Colour::new(0.8, 0.8, 0.0))))),
 		Box::new(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, Box::new(Metal::new(Colour::new(0.8, 0.6, 0.2), 0.3)))),
 		Box::new(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, Box::new(Dielectric::new(1.5)))),
-		Box::new(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), -0.45, Box::new(Dielectric::new(1.5))))
+		Box::new(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), -0.45, Box::new(Dielectric::new(1.5)))),
+		
+		Box::new(Sphere::new(Vec3::new(0.0, 1.3, -1.0), 0.5, Box::new(Emission::new(Colour::new(1.0, 1.0, 1.0)))))
 		]);
 	world
 }

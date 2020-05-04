@@ -74,20 +74,25 @@ pub fn colour(r: &Ray, world: &dyn Hitable, depth: u32) -> Colour {
 	match world.hit(r,0.001, f32::MAX) {
 		Some(record) => {
 			if depth < 50 {
+				
+				let emitted = record.material.emitted();
+			
 				match record.material.scatter(r, &record) {
 					Some(mat) => {
-						colour(&mat.scattered(), world, depth+1) * mat.attenuation()
+						emitted + colour(&mat.scattered(), world, depth+1) * mat.attenuation()
 					},
-					None => {Colour::new(0.0, 0.0, 0.0)},
+					None => emitted,
 				}
 			} else {
 				Colour::new(0.0, 0.0, 0.0)
 			}
 		},
 		None => {//show background.
-			let unit_direction = r.direction().unit_vector();
+			/*let unit_direction = r.direction().unit_vector();
 			let t = 0.6*(unit_direction.y() + 1.0);
 			(1.0-t)*Colour::new(1.0, 1.0, 1.0) + t*Colour::new(0.5,0.7,1.0)
+			*/
+			Colour::new(0.0, 0.0, 0.0)
 		},
 	}
 }
