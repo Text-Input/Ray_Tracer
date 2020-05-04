@@ -23,7 +23,7 @@ use std::time::{Instant};
 fn main() {
 	let width = 400;
 	let height = 200;
-	let samples = 100;
+	let samples = 200;
 	let seed: u64 = 0;
 	
 	let lookfrom = Vec3::new(13.0, 2.0, 3.0);

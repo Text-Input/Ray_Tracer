@@ -28,11 +28,13 @@ pub fn render(width: usize, height: usize, samples: usize,cam: Camera, world: Hi
 	bar.set_draw_delta((height*width/1000) as u64);
 	
 	println!("building BVH!");
-	//let world = BvhNode::new(world.hitables);
-	//println!("BVH tree: {:#?}", world);
+	//let world: BvhNode = BvhNode::new(world.hitables);
+	let world: BvhNode = BvhNode::new_sah(world.hitables);
+	
 	println!("Starting raytracing!");
 	
 	let buf: Vec<_> = (0..(width*height)).into_par_iter().map(|i| {	
+		
 		let x = i%width;
 		let y = i/width;
 		

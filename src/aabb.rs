@@ -56,4 +56,27 @@ impl AABB {
 					  box0.max().y().max(box1.max().y()),
 					  box0.max().z().max(box1.max().z())))
 	}
+	
+	pub fn longest_axis(&self) -> usize {
+		let x_span = self.max().x() - self.min().x();
+		let y_span = self.max().y() - self.min().y();
+		let z_span = self.max().z() - self.min().z();
+		
+		if x_span > y_span && x_span > z_span {
+			return 0;
+		} else if y_span > z_span {
+			return 1;
+		} else { //z_span is the largest.
+			return 2;
+		}
+	}
+	
+	//returns the surface area of the bounding box.
+	pub fn area(&self) -> f32 {
+		let x_span = self.max().x() - self.min().x();
+		let y_span = self.max().y() - self.min().y();
+		let z_span = self.max().z() - self.min().z();
+		
+		2.0*(x_span*y_span+x_span*z_span+y_span*z_span)
+	}
 }
