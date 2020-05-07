@@ -12,6 +12,7 @@ use ray_tracer::vec3::*;
 use ray_tracer::hit::hitable_list::*;
 use ray_tracer::hit::sphere::*;
 use ray_tracer::hit::triangle::*;
+use ray_tracer::hit::rectangle::*;
 use ray_tracer::hit::*;
 
 use ray_tracer::material::dielectric::*;
@@ -43,8 +44,9 @@ fn main() {
 
     //let mut rng = SmallRng::seed_from_u64(seed);
     //let scene = random_scene(&mut rng);
-    let scene = static_scene();
-
+    //let scene = static_scene();
+	let scene = cornell_box();
+	
     let time_start = Instant::now();
 
     let buf = ray_tracer::render(width, height, samples, cam, scene);
@@ -178,4 +180,28 @@ fn static_scene() -> HitableList {
         )),
     ]);
     world
+}
+
+fn cornell_box() -> HitableList {
+	let world = HitableList::new(vec![
+        Box::new(XyRectangle::new(
+            3.0, 5.0, 1.0, 3.0, -2.0,
+            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0)))
+        )),
+		Box::new(Sphere::new(
+			Vec3::new(0.0, 7.0, 0.0), 2.0, 
+			Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
+		)),
+		
+		Box::new(Sphere::new(
+			Vec3::new(0.0, -1000.0, 0.0), 1000.0, 
+			Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5)))
+		)),
+		Box::new(Sphere::new(
+			Vec3::new(0.0, 2.0, 0.0), 2.0,
+			Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5)))
+		)),
+		
+	]);
+	world
 }
