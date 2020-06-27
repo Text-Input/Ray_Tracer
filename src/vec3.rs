@@ -1,3 +1,6 @@
+use pyo3::prelude::*;
+
+#[pyclass]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec3 {
     x: f32,
@@ -5,11 +8,15 @@ pub struct Vec3 {
     z: f32,
 }
 
+#[pymethods]
 impl Vec3 {
-    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
+	#[new]
+	pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
+}
 
+impl Vec3 {
     pub fn x(&self) -> f32 {
         self.x
     }

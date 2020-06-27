@@ -42,16 +42,25 @@ fn main() {
         dist_to_focus,
     );
 
-    //let mut rng = SmallRng::seed_from_u64(seed);
-    //let scene = random_scene(&mut rng);
+    let mut rng = SmallRng::seed_from_u64(_seed);
+    let scene = random_scene(&mut rng);
     //let scene = static_scene();
-	let scene = cornell_box();
+	//let scene = cornell_box();
 	
     let time_start = Instant::now();
 
     let buf = ray_tracer::render(width, height, samples, cam, scene);
 
     let time_end = Instant::now();
+
+	let buf: Vec<[u8;3]> = buf.iter().map(|x| {
+			let r = (255.99 * x[0]) as u8;
+            let g = (255.99 * x[1]) as u8;
+            let b = (255.99 * x[2]) as u8;
+
+            let out: [u8; 3] = [r, g, b];
+            out
+	}).collect();
 
     let mut buff = Vec::with_capacity(width * height * 3);
     for i in buf.iter() {
@@ -140,12 +149,13 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
         Box::new(Metal::new(Colour::new(0.7, 0.6, 0.5), 0.0)),
     )));
 
-    //let tri_mat = Box::new(Lambertian::new(Colour::new(0.4, 0.4, 0.1)));
-    //objs.push(Box::new(Triangle::new(Vec3::new(0.0, 0.0, -4.0), Vec3::new(0.0, 0.0, 4.0), Vec3::new(0.0, 4.0, 0.0), tri_mat)));
+    let tri_mat = Box::new(Lambertian::new(Colour::new(0.4, 0.4, 0.1)));
+    objs.push(Box::new(Triangle::new(Vec3::new(0.0, 0.0, -4.0), Vec3::new(0.0, 0.0, 4.0), Vec3::new(0.0, 4.0, 0.0), tri_mat)));
 
     HitableList::new(objs)
 }
 
+#[allow(dead_code)]
 fn static_scene() -> HitableList {
     let world = HitableList::new(vec![
         Box::new(Sphere::new(
@@ -182,6 +192,7 @@ fn static_scene() -> HitableList {
     world
 }
 
+#[allow(dead_code)]
 fn cornell_box() -> HitableList {
 	let world = HitableList::new(vec![
         Box::new(XyRectangle::new(

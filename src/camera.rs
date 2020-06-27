@@ -3,6 +3,9 @@ use super::vec3::*;
 
 use super::util::*;
 
+use pyo3::prelude::*;
+
+#[pyclass]
 #[derive(Debug, Clone, Copy)]
 pub struct Camera {
     origin: Vec3,
@@ -14,10 +17,11 @@ pub struct Camera {
     w: Vec3,
     lens_radius: f32,
 }
-
+#[pymethods]
 impl Camera {
-    //vfov is top to bottom in degrees.
-    pub fn new(
+	//vfov is top to bottom in degrees.
+	#[new]
+	pub fn new(
         lookfrom: Vec3,
         lookat: Vec3,
         vup: Vec3,
@@ -49,6 +53,9 @@ impl Camera {
             lens_radius: (aperture / 2.0),
         }
     }
+}
+
+impl Camera {
 
     pub fn get_ray(&self, x: f32, y: f32) -> Ray {
         let rd = self.lens_radius * random_in_unit_disk();
