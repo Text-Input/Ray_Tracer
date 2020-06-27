@@ -95,3 +95,28 @@ impl Hitable for Triangle {
         ))
     }
 }
+
+#[cfg(test)]
+mod benches {
+	use super::*;
+	
+	extern crate test;
+	use test::Bencher;
+	
+	use crate::material::dielectric::*;
+	
+	#[bench]
+	fn hit_triangle(b: &mut Bencher){
+		let triangle = Triangle::new(
+			Vec3::new(0.0, 1.1, 4.2), 
+			Vec3::new(1.0, 1.1, 5.2), 
+			Vec3::new(3.0, 1.1, 6.2), 
+			Box::new(Dielectric::new(1.35)));
+		
+		let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
+		
+		let r = test::black_box(&ray);
+		
+		b.iter(|| test::black_box(triangle.hit(r, 0.0, 1000.0)));
+	}
+}

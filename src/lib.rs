@@ -1,3 +1,5 @@
+#![feature(test)]
+
 //extern crate hello;
 extern crate image;
 extern crate rand;
@@ -155,4 +157,36 @@ fn ray_tracer(_py: Python, m: &PyModule) -> PyResult<()> {
 }
 
 
+#[cfg(test)]
+mod benches {
+	use super::*;
+	
+	extern crate test;
+	use test::Bencher;
+	
+	use crate::material::dielectric::*;
+	use crate::hit::sphere::*;
+	
+	#[bench]
+	fn color_1sphere(b: &mut Bencher){
+		let sphere = Sphere::new(Vec3::new(0.0, 3.0, 0.0), 1.0, Box::new(Dielectric::new(1.35)));
+		let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0));
+		
+		let r = test::black_box(&ray);
+		
+		b.iter(|| test::black_box(colour(r, &sphere, 48)));
+	}
 
+	#[bench]
+	fn color_bvh_1sphere(b: &mut Bencher){
+		let bvh = BvhNode::new(vec![Box::new(
+			Sphere::new(Vec3::new(0.0, 3.0, 0.0), 1.0, Box::new(Dielectric::new(1.35)))
+			)]);
+			
+		let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0));
+		
+		let r = test::black_box(&ray);
+		
+		b.iter(|| test::black_box(colour(r, &bvh, 0)));
+	}
+}
