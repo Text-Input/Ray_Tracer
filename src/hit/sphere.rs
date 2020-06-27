@@ -6,6 +6,7 @@ use crate::vec3::*;
 pub struct Sphere {
     center: Vec3,
     radius: f32,
+	radius2: f32,
     material: Box<dyn Material>,
 }
 
@@ -14,6 +15,7 @@ impl Sphere {
         Sphere {
             center,
             radius,
+			radius2: radius * radius,
             material,
         }
     }
@@ -25,7 +27,7 @@ impl Hitable for Sphere {
         let oc = r.origin() - self.center;
         let a = r.direction().dot(r.direction());
         let b = oc.dot(r.direction());
-        let c = oc.dot(oc) - self.radius * self.radius;
+        let c = oc.dot(oc) - self.radius2;
         let discriminant = b * b - a * c;
 
         if discriminant > 0.0 {
