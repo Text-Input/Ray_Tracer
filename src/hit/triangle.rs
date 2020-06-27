@@ -17,20 +17,29 @@ pub struct Triangle {
     a: Vec3,
     b: Vec3,
     c: Vec3,
+	
+	edge1: Vec3,
+	edge2: Vec3,
+	
+	normal: Vec3,
+	
     material: Box<dyn Material>,
 }
 
 impl Triangle {
     pub fn new(a: Vec3, b: Vec3, c: Vec3, material: Box<dyn Material>) -> Triangle {
-        Triangle { a, b, c, material }
+        Triangle { a, b, c, edge1: b-a, edge2: c-a, normal: (b-a).cross(c-a), material }
     }
 }
 
 impl Hitable for Triangle {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        let edge1 = self.b - self.a;
-        let edge2 = self.c - self.a;
-
+        //let edge1 = self.b - self.a;
+        //let edge2 = self.c - self.a;
+		
+		let edge1 = self.edge1;
+		let edge2 = self.edge2;
+		
         let h = r.direction().cross(edge2);
         let a = edge1.dot(h);
 
@@ -60,7 +69,7 @@ impl Hitable for Triangle {
             Some(HitRecord {
                 t: t,
                 position: r.origin() + r.direction() * t,
-                normal: edge1.cross(edge2),
+                normal: self.normal,
                 material: &self.material,
             })
         } else {
