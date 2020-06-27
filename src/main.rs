@@ -26,7 +26,7 @@ fn main() {
     let width = 400 * 2;
     let height = 200 * 2;
     let samples = 200 * 8;
-    let seed: u64 = 0;
+    let _seed: u64 = 0;
 
     let lookfrom = Vec3::new(13.0, 2.0, 3.0);
     let lookat = Vec3::new(0.0, 0.0, 0.0);
