@@ -47,9 +47,9 @@ impl Camera {
             horizontal: 2.0 * half_width * focus_dist * u,
             vertical: 2.0 * half_height * focus_dist * v,
             origin: lookfrom,
-            u: u,
-            v: v,
-            w: w,
+            u,
+            v,
+            w,
             lens_radius: (aperture / 2.0),
         }
     }

@@ -18,12 +18,9 @@ impl Hitable for HitableList {
         let mut rec = None;
 
         for elem in self.hitables.iter() {
-            match elem.hit(r, t_min, closest_so_far) {
-                Some(record) => {
-                    closest_so_far = record.t;
-                    rec = Some(record);
-                }
-                None => {} //do nothing.
+            if let Some(record) = elem.hit(r, t_min, closest_so_far) {
+                closest_so_far = record.t;
+                rec = Some(record);
             }
         }
         rec

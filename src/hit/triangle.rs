@@ -75,7 +75,7 @@ impl Hitable for Triangle {
         if t > t_min && t < t_max {
             // ray intersection!
             Some(HitRecord {
-                t: t,
+                t,
                 position: r.origin() + r.direction() * t,
                 normal: self.normal,
                 material: &self.material,

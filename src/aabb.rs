@@ -61,12 +61,12 @@ impl AABB {
         let z_span = self.max().z() - self.min().z();
 
         if x_span > y_span && x_span > z_span {
-            return 0;
+            0
         } else if y_span > z_span {
-            return 1;
+            1
         } else {
             //z_span is the largest.
-            return 2;
+            2
         }
     }
 

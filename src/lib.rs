@@ -63,7 +63,7 @@ pub fn render(
 
     println!("Done raytracing, finishing up!");
 
-    return buf;
+    buf
 }
 
 pub fn pixel(

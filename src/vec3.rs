@@ -84,9 +84,9 @@ impl Vec3 {
         let dt = uv.dot(normal);
         let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
         if discriminant > 0.0 {
-            return Some(ni_over_nt * (*uv - normal * dt) - normal * discriminant.sqrt());
+            Some(ni_over_nt * (*uv - normal * dt) - normal * discriminant.sqrt())
         } else {
-            return None;
+            None
         }
     }
 }
