@@ -1,6 +1,10 @@
 extern crate ray_tracer;
 
-use image::ImageBuffer;
+use std::path::Path;
+use std::fs::File;
+use std::io::BufWriter;
+
+use png::*;
 
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -25,7 +29,7 @@ use std::time::Instant;
 fn main() {
     let width = 400 * 2;
     let height = 200 * 2;
-    let samples = 200 * 8;
+    let samples = 200 * 2;
     let _seed: u64 = 0;
 
     let lookfrom = Vec3::new(13.0, 2.0, 3.0);
@@ -66,11 +70,13 @@ fn main() {
     for i in buf.iter() {
         buff.extend(i);
     }
-
-    let imgbuf: ImageBuffer<image::Rgb<u8>, Vec<u8>> =
-        ImageBuffer::from_vec(width as u32, height as u32, buff).unwrap();
-
-    imgbuf.save("out.png").unwrap();
+	let file = File::create(Path::new("out.png")).unwrap();
+	let mut encoder = Encoder::new(BufWriter::new(file), width as  u32, height as u32);
+	encoder.set_color(ColorType::RGB);
+	encoder.set_depth(BitDepth::Eight);
+	let mut writer = encoder.write_header().unwrap();
+	
+	writer.write_image_data(&buff).unwrap();
 
     println!(
         "it took {} seconds to render this image",

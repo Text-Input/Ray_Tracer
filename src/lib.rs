@@ -1,7 +1,6 @@
 #![feature(test)]
 
 //extern crate hello;
-extern crate image;
 extern crate rand;
 
 use pyo3::prelude::*;
