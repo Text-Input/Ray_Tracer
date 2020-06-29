@@ -22,12 +22,12 @@ impl AABB {
 
     #[inline]
     pub fn hit(&self, r: &Ray, tmin: f32, tmax: f32) -> bool {
-        for i in 0..3 {	
+        for i in 0..3 {
             let inv_d = r.inv_direction().get(i);
-			let mut t0 = (self.min.get(i) - r.origin().get(i)) * inv_d;
+            let mut t0 = (self.min.get(i) - r.origin().get(i)) * inv_d;
             let mut t1 = (self.max.get(i) - r.origin().get(i)) * inv_d;
-            
-			if r.dir_sign()[i] {
+
+            if r.dir_sign()[i] {
                 std::mem::swap(&mut t0, &mut t1);
             }
             let tmin = if t0 > tmin { t0 } else { tmin };
@@ -82,36 +82,37 @@ impl AABB {
 
 #[cfg(test)]
 mod tests {
-	use super::*;
-	
-	#[test]
-	fn aabb_hits () {
-		let aabb = AABB::new(Vec3::new(-0.5, 0.0, 0.0), Vec3::new(0.0, 5.0, 5.0));
-		let ray = Ray::new(Vec3::new(2.0, 1.0,1.0), Vec3::new(-1.0, 0.0, 0.0));
-		
-		assert!(aabb.hit(&ray, 0.0001, 1000.0));
-	}
+    use super::*;
 
+    #[test]
+    fn aabb_hits() {
+        let aabb = AABB::new(Vec3::new(-0.5, 0.0, 0.0), Vec3::new(0.0, 5.0, 5.0));
+        let ray = Ray::new(Vec3::new(2.0, 1.0, 1.0), Vec3::new(-1.0, 0.0, 0.0));
+
+        assert!(aabb.hit(&ray, 0.0001, 1000.0));
+    }
 }
-
 
 #[cfg(test)]
 mod benches {
-	use super::*;
-	
-	extern crate test;
-	use test::Bencher;
-	
-	#[bench]
-	fn hit_aabb(b: &mut Bencher){
-		let aabb = AABB::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
-		let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
-		
-		//let r = test::black_box(&ray);
-		
-		b.iter(|| test::black_box(
-				aabb.hit(test::black_box(&ray), test::black_box(0.0), test::black_box(1000.0))
-		));
-	}
-	
+    use super::*;
+
+    extern crate test;
+    use test::Bencher;
+
+    #[bench]
+    fn hit_aabb(b: &mut Bencher) {
+        let aabb = AABB::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
+        let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
+
+        //let r = test::black_box(&ray);
+
+        b.iter(|| {
+            test::black_box(aabb.hit(
+                test::black_box(&ray),
+                test::black_box(0.0),
+                test::black_box(1000.0),
+            ))
+        });
+    }
 }

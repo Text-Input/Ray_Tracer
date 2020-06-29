@@ -19,9 +19,9 @@ pub struct Camera {
 }
 #[pymethods]
 impl Camera {
-	//vfov is top to bottom in degrees.
-	#[new]
-	pub fn new(
+    //vfov is top to bottom in degrees.
+    #[new]
+    pub fn new(
         lookfrom: Vec3,
         lookat: Vec3,
         vup: Vec3,
@@ -56,7 +56,6 @@ impl Camera {
 }
 
 impl Camera {
-
     pub fn get_ray(&self, x: f32, y: f32) -> Ray {
         let rd = self.lens_radius * random_in_unit_disk();
         let offset = self.u * rd.x() + self.v * rd.y();

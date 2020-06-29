@@ -6,7 +6,7 @@ use crate::vec3::*;
 pub struct Sphere {
     center: Vec3,
     radius: f32,
-	radius2: f32,
+    radius2: f32,
     material: Box<dyn Material>,
 }
 
@@ -15,7 +15,7 @@ impl Sphere {
         Sphere {
             center,
             radius,
-			radius2: radius * radius,
+            radius2: radius * radius,
             material,
         }
     }
@@ -64,20 +64,24 @@ impl Hitable for Sphere {
 
 #[cfg(test)]
 mod benches {
-	use super::*;
-	
-	extern crate test;
-	use test::Bencher;
-	
-	use crate::material::dielectric::*;
-	
-	#[bench]
-	fn hit_sphere(b: &mut Bencher){
-		let sphere = Sphere::new(Vec3::new(0.0, 1.1, 2.2), 5.0, Box::new(Dielectric::new(1.35)));
-		let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
-		
-		let r = test::black_box(&ray);
-		
-		b.iter(|| test::black_box(sphere.hit(r, 0.0, 1000.0)));
-	}
+    use super::*;
+
+    extern crate test;
+    use test::Bencher;
+
+    use crate::material::dielectric::*;
+
+    #[bench]
+    fn hit_sphere(b: &mut Bencher) {
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 1.1, 2.2),
+            5.0,
+            Box::new(Dielectric::new(1.35)),
+        );
+        let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
+
+        let r = test::black_box(&ray);
+
+        b.iter(|| test::black_box(sphere.hit(r, 0.0, 1000.0)));
+    }
 }

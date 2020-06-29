@@ -1,8 +1,8 @@
 pub mod bvh;
 pub mod hitable_list;
+pub mod rectangle;
 pub mod sphere;
 pub mod triangle;
-pub mod rectangle;
 
 use super::aabb::*;
 use super::material::*;

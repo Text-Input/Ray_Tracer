@@ -10,8 +10,8 @@ pub struct Vec3 {
 
 #[pymethods]
 impl Vec3 {
-	#[new]
-	pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
+    #[new]
+    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
 }

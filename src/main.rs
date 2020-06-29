@@ -1,8 +1,8 @@
 extern crate ray_tracer;
 
-use std::path::Path;
 use std::fs::File;
 use std::io::BufWriter;
+use std::path::Path;
 
 use png::*;
 
@@ -14,9 +14,9 @@ use ray_tracer::colour::*;
 use ray_tracer::vec3::*;
 
 use ray_tracer::hit::hitable_list::*;
+use ray_tracer::hit::rectangle::*;
 use ray_tracer::hit::sphere::*;
 use ray_tracer::hit::triangle::*;
-use ray_tracer::hit::rectangle::*;
 use ray_tracer::hit::*;
 
 use ray_tracer::material::dielectric::*;
@@ -49,34 +49,37 @@ fn main() {
     let mut rng = SmallRng::seed_from_u64(_seed);
     let scene = random_scene(&mut rng);
     //let scene = static_scene();
-	//let scene = cornell_box();
-	
+    //let scene = cornell_box();
+
     let time_start = Instant::now();
 
     let buf = ray_tracer::render(width, height, samples, cam, scene);
 
     let time_end = Instant::now();
 
-	let buf: Vec<[u8;3]> = buf.iter().map(|x| {
-			let r = (255.99 * x[0]) as u8;
+    let buf: Vec<[u8; 3]> = buf
+        .iter()
+        .map(|x| {
+            let r = (255.99 * x[0]) as u8;
             let g = (255.99 * x[1]) as u8;
             let b = (255.99 * x[2]) as u8;
 
             let out: [u8; 3] = [r, g, b];
             out
-	}).collect();
+        })
+        .collect();
 
     let mut buff = Vec::with_capacity(width * height * 3);
     for i in buf.iter() {
         buff.extend(i);
     }
-	let file = File::create(Path::new("out.png")).unwrap();
-	let mut encoder = Encoder::new(BufWriter::new(file), width as  u32, height as u32);
-	encoder.set_color(ColorType::RGB);
-	encoder.set_depth(BitDepth::Eight);
-	let mut writer = encoder.write_header().unwrap();
-	
-	writer.write_image_data(&buff).unwrap();
+    let file = File::create(Path::new("out.png")).unwrap();
+    let mut encoder = Encoder::new(BufWriter::new(file), width as u32, height as u32);
+    encoder.set_color(ColorType::RGB);
+    encoder.set_depth(BitDepth::Eight);
+    let mut writer = encoder.write_header().unwrap();
+
+    writer.write_image_data(&buff).unwrap();
 
     println!(
         "it took {} seconds to render this image",
@@ -156,7 +159,12 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
     )));
 
     let tri_mat = Box::new(Lambertian::new(Colour::new(0.4, 0.4, 0.1)));
-    objs.push(Box::new(Triangle::new(Vec3::new(0.0, 0.0, -4.0), Vec3::new(0.0, 0.0, 4.0), Vec3::new(0.0, 4.0, 0.0), tri_mat)));
+    objs.push(Box::new(Triangle::new(
+        Vec3::new(0.0, 0.0, -4.0),
+        Vec3::new(0.0, 0.0, 4.0),
+        Vec3::new(0.0, 4.0, 0.0),
+        tri_mat,
+    )));
 
     HitableList::new(objs)
 }
@@ -200,25 +208,30 @@ fn static_scene() -> HitableList {
 
 #[allow(dead_code)]
 fn cornell_box() -> HitableList {
-	let world = HitableList::new(vec![
+    let world = HitableList::new(vec![
         Box::new(XyRectangle::new(
-            3.0, 5.0, 1.0, 3.0, -2.0,
-            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0)))
+            3.0,
+            5.0,
+            1.0,
+            3.0,
+            -2.0,
+            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
         )),
-		Box::new(Sphere::new(
-			Vec3::new(0.0, 7.0, 0.0), 2.0, 
-			Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
-		)),
-		
-		Box::new(Sphere::new(
-			Vec3::new(0.0, -1000.0, 0.0), 1000.0, 
-			Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5)))
-		)),
-		Box::new(Sphere::new(
-			Vec3::new(0.0, 2.0, 0.0), 2.0,
-			Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5)))
-		)),
-		
-	]);
-	world
+        Box::new(Sphere::new(
+            Vec3::new(0.0, 7.0, 0.0),
+            2.0,
+            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
+        )),
+        Box::new(Sphere::new(
+            Vec3::new(0.0, -1000.0, 0.0),
+            1000.0,
+            Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
+        )),
+        Box::new(Sphere::new(
+            Vec3::new(0.0, 2.0, 0.0),
+            2.0,
+            Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
+        )),
+    ]);
+    world
 }
