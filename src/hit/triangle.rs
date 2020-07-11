@@ -1,6 +1,7 @@
 use crate::aabb::*;
 use crate::ray::*;
 use crate::vec3::*;
+use std::sync::Arc;
 
 use super::*;
 
@@ -23,11 +24,11 @@ pub struct Triangle {
 
     normal: Vec3,
 
-    material: Box<dyn Material>,
+    material: Arc<dyn Material>,
 }
 
 impl Triangle {
-    pub fn new(a: Vec3, b: Vec3, c: Vec3, material: Box<dyn Material>) -> Triangle {
+    pub fn new(a: Vec3, b: Vec3, c: Vec3, material: Arc<dyn Material>) -> Triangle {
         Triangle {
             a,
             b,
@@ -78,7 +79,7 @@ impl Hitable for Triangle {
                 t,
                 position: r.origin() + r.direction() * t,
                 normal: self.normal,
-                material: &self.material,
+                material: &*self.material,
             })
         } else {
             None

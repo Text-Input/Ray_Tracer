@@ -3,6 +3,8 @@
 //extern crate hello;
 extern crate rand;
 
+use std::sync::Arc;
+
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
@@ -127,16 +129,10 @@ fn py_render(
     cam: Camera,
     world: Vec<Vec<Vec3>>,
 ) -> Vec<[f32; 4]> {
+    let mat: Arc<dyn material::Material> = Arc::new(Lambertian::new(Colour::new(0.4, 0.2, 0.1)));
     let l: Vec<_> = world
         .iter()
-        .map(|x| {
-            Box::new(Triangle::new(
-                x[0],
-                x[1],
-                x[2],
-                Box::new(Lambertian::new(Colour::new(0.4, 0.2, 0.1))),
-            )) as Box<dyn Hitable>
-        })
+        .map(|x| Box::new(Triangle::new(x[0], x[1], x[2], Arc::clone(&mat))) as Box<dyn Hitable>)
         .collect();
 
     println!("length of triangles: {}", l.len());

@@ -4,6 +4,8 @@ use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
 
+use std::sync::Arc;
+
 use png::*;
 
 use rand::rngs::SmallRng;
@@ -93,7 +95,7 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
     objs.push(Box::new(Sphere::new(
         Vec3::new(0.0, -1000.0, 0.0),
         1000.0,
-        Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
+        Arc::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
     )));
 
     for a in -11..11 {
@@ -111,7 +113,7 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
                     objs.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Lambertian::new(Colour::new(
+                        Arc::new(Lambertian::new(Colour::new(
                             rng.gen::<f32>() * rng.gen::<f32>(),
                             rng.gen::<f32>() * rng.gen::<f32>(),
                             rng.gen::<f32>() * rng.gen::<f32>(),
@@ -122,7 +124,7 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
                     objs.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Metal::new(
+                        Arc::new(Metal::new(
                             Colour::new(
                                 0.5 * (1.0 + rng.gen::<f32>()),
                                 0.5 * (1.0 + rng.gen::<f32>()),
@@ -136,7 +138,7 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
                     objs.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Dielectric::new(1.5)),
+                        Arc::new(Dielectric::new(1.5)),
                     )));
                 }
             }
@@ -145,20 +147,20 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
     objs.push(Box::new(Sphere::new(
         Vec3::new(0.0, 1.0, 0.0),
         1.0,
-        Box::new(Dielectric::new(1.5)),
+        Arc::new(Dielectric::new(1.5)),
     )));
     objs.push(Box::new(Sphere::new(
         Vec3::new(-4.0, 1.0, 0.0),
         1.0,
-        Box::new(Lambertian::new(Colour::new(0.4, 0.2, 0.1))),
+        Arc::new(Lambertian::new(Colour::new(0.4, 0.2, 0.1))),
     )));
     objs.push(Box::new(Sphere::new(
         Vec3::new(4.0, 1.0, 0.0),
         1.0,
-        Box::new(Metal::new(Colour::new(0.7, 0.6, 0.5), 0.0)),
+        Arc::new(Metal::new(Colour::new(0.7, 0.6, 0.5), 0.0)),
     )));
 
-    let tri_mat = Box::new(Lambertian::new(Colour::new(0.4, 0.4, 0.1)));
+    let tri_mat = Arc::new(Lambertian::new(Colour::new(0.4, 0.4, 0.1)));
     objs.push(Box::new(Triangle::new(
         Vec3::new(0.0, 0.0, -4.0),
         Vec3::new(0.0, 0.0, 4.0),
@@ -175,32 +177,32 @@ fn static_scene() -> HitableList {
         Box::new(Sphere::new(
             Vec3::new(0.0, 0.0, -1.0),
             0.5,
-            Box::new(Lambertian::new(Colour::new(0.1, 0.2, 0.5))),
+            Arc::new(Lambertian::new(Colour::new(0.1, 0.2, 0.5))),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, -100.5, -1.0),
             100.0,
-            Box::new(Lambertian::new(Colour::new(0.8, 0.8, 0.0))),
+            Arc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.0))),
         )),
         Box::new(Sphere::new(
             Vec3::new(1.0, 0.0, -1.0),
             0.5,
-            Box::new(Metal::new(Colour::new(0.8, 0.6, 0.2), 0.3)),
+            Arc::new(Metal::new(Colour::new(0.8, 0.6, 0.2), 0.3)),
         )),
         Box::new(Sphere::new(
             Vec3::new(-1.0, 0.0, -1.0),
             0.5,
-            Box::new(Dielectric::new(1.5)),
+            Arc::new(Dielectric::new(1.5)),
         )),
         Box::new(Sphere::new(
             Vec3::new(-1.0, 0.0, -1.0),
             -0.45,
-            Box::new(Dielectric::new(1.5)),
+            Arc::new(Dielectric::new(1.5)),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, 1.3, -1.0),
             0.5,
-            Box::new(Emission::new(Colour::new(1.0, 1.0, 1.0))),
+            Arc::new(Emission::new(Colour::new(1.0, 1.0, 1.0))),
         )),
     ]);
     world
@@ -215,22 +217,22 @@ fn cornell_box() -> HitableList {
             1.0,
             3.0,
             -2.0,
-            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
+            Arc::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, 7.0, 0.0),
             2.0,
-            Box::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
+            Arc::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, -1000.0, 0.0),
             1000.0,
-            Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
+            Arc::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, 2.0, 0.0),
             2.0,
-            Box::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
+            Arc::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
         )),
     ]);
     world

@@ -1,17 +1,18 @@
 use crate::hit::*;
 use crate::ray::*;
 use crate::vec3::*;
+use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct Sphere {
     center: Vec3,
     radius: f32,
     radius2: f32,
-    material: Box<dyn Material>,
+    material: Arc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Box<dyn Material>) -> Sphere {
+    pub fn new(center: Vec3, radius: f32, material: Arc<dyn Material>) -> Sphere {
         Sphere {
             center,
             radius,
@@ -38,7 +39,7 @@ impl Hitable for Sphere {
                     t: temp,
                     position: r.point_at_parameter(temp),
                     normal: (r.point_at_parameter(temp) - self.center) / self.radius,
-                    material: &self.material,
+                    material: &*self.material,
                 });
             }
             let temp = (-b + discriminant.sqrt()) / a;
@@ -47,7 +48,7 @@ impl Hitable for Sphere {
                     t: temp,
                     position: r.point_at_parameter(temp),
                     normal: (r.point_at_parameter(temp) - self.center) / self.radius,
-                    material: &self.material,
+                    material: &*self.material,
                 });
             }
         }

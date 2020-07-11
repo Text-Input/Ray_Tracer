@@ -15,7 +15,7 @@ pub struct HitRecord<'a> {
     pub t: f32,
     pub position: Vec3,
     pub normal: Vec3,
-    pub material: &'a Box<dyn Material>,
+    pub material: &'a dyn Material,
 }
 
 //implemented by objects in the scene, so they can be hit by the rays.

@@ -1,6 +1,7 @@
 use crate::aabb::*;
 use crate::ray::*;
 use crate::vec3::*;
+use std::sync::Arc;
 
 use super::*;
 
@@ -11,8 +12,10 @@ pub struct XyRectangle {
     y0: f32,
     y1: f32,
     k: f32,
-    material: Box<dyn Material>,
+    material: Arc<dyn Material>,
 }
+
+
 
 impl XyRectangle {
     pub fn new(
@@ -21,7 +24,7 @@ impl XyRectangle {
         y0: f32,
         y1: f32,
         k: f32,
-        material: Box<dyn Material>,
+        material: Arc<dyn Material>,
     ) -> XyRectangle {
         XyRectangle {
             x0,
@@ -51,7 +54,7 @@ impl Hitable for XyRectangle {
             t,
             position: r.point_at_parameter(t),
             normal: Vec3::new(0.0, 0.0, 1.0),
-            material: &self.material,
+            material: &*self.material,
         })
     }
 
