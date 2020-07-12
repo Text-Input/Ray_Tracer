@@ -1,5 +1,6 @@
 pub mod bvh;
 pub mod hitable_list;
+pub mod instancing;
 pub mod rectangle;
 pub mod sphere;
 pub mod triangle;
@@ -15,7 +16,33 @@ pub struct HitRecord<'a> {
     pub t: f32,
     pub position: Vec3,
     pub normal: Vec3,
+    pub front_face: bool,
     pub material: &'a dyn Material,
+}
+
+impl<'a> HitRecord<'a> {
+    pub fn new(
+        t: f32,
+        position: Vec3,
+        incoming: &Ray,
+        outward_normal: Vec3,
+        material: &'a dyn Material,
+    ) -> HitRecord<'a> {
+        let front_face = incoming.direction().dot(outward_normal) < 0.0;
+        let normal = if front_face {
+            outward_normal
+        } else {
+            -outward_normal
+        };
+
+        HitRecord {
+            t,
+            position,
+            normal,
+            front_face,
+            material,
+        }
+    }
 }
 
 //implemented by objects in the scene, so they can be hit by the rays.

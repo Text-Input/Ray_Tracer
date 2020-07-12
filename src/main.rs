@@ -16,6 +16,7 @@ use ray_tracer::colour::*;
 use ray_tracer::vec3::*;
 
 use ray_tracer::hit::hitable_list::*;
+use ray_tracer::hit::instancing::*;
 use ray_tracer::hit::rectangle::*;
 use ray_tracer::hit::sphere::*;
 use ray_tracer::hit::triangle::*;
@@ -29,9 +30,13 @@ use ray_tracer::material::metal::*;
 use std::time::Instant;
 
 fn main() {
-    let width = 400 * 2;
-    let height = 200 * 2;
-    let samples = 200 * 2;
+    let width = 500;
+    let height = 500;
+
+    //let width = 1920;
+    //let height = 1080;
+
+    let samples = 200 * 8;
     let _seed: u64 = 0;
 
     let lookfrom = Vec3::new(13.0, 2.0, 3.0);
@@ -48,10 +53,26 @@ fn main() {
         dist_to_focus,
     );
 
-    let mut rng = SmallRng::seed_from_u64(_seed);
-    let scene = random_scene(&mut rng);
+    //cornell box view info
+    let lookfrom = Vec3::new(278.0, 278.0, -800.0);
+    let lookat = Vec3::new(278.0, 278.0, 0.0);
+    let dist_to_focus = 10.0;
+    let aperture = 0.0;
+    let cam = Camera::new(
+        lookfrom,
+        lookat,
+        Vec3::new(0.0, 1.0, 0.0),
+        40.0,
+        (width as f32) / (height as f32),
+        aperture,
+        dist_to_focus,
+    );
+
+    //let mut rng = SmallRng::seed_from_u64(_seed);
+    //let scene = random_scene(&mut rng);
     //let scene = static_scene();
-    //let scene = cornell_box();
+    let scene = cornell_box();
+    //let scene = simple_light();
 
     let time_start = Instant::now();
 
@@ -210,7 +231,79 @@ fn static_scene() -> HitableList {
 
 #[allow(dead_code)]
 fn cornell_box() -> HitableList {
+    use ray_tracer::material::Material;
+
+    let red: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.65, 0.05, 0.05)));
+    let white: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.73, 0.73, 0.73)));
+    let green: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.12, 0.45, 0.15)));
+    let light: Arc<dyn Material> = Arc::new(Emission::new(Colour::new(15.0, 15.0, 15.0)));
+
     let world = HitableList::new(vec![
+        Box::new(FlipFace::new(YzRectangle::new(
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Arc::clone(&green),
+        ))),
+        Box::new(YzRectangle::new(
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Arc::clone(&red),
+        )),
+        Box::new(XzRectangle::new(
+            213.0,
+            343.0,
+            227.0,
+            332.0,
+            554.0,
+            Arc::clone(&light),
+        )),
+        Box::new(FlipFace::new(XzRectangle::new(
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Arc::clone(&white),
+        ))),
+        Box::new(XzRectangle::new(
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Arc::clone(&white),
+        )),
+        Box::new(FlipFace::new(XyRectangle::new(
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Arc::clone(&white),
+        ))),
+    ]);
+    world
+}
+
+#[allow(dead_code)]
+fn simple_light() -> HitableList {
+    let world = HitableList::new(vec![
+        Box::new(Sphere::new(
+            Vec3::new(0.0, -1000.0, 0.0),
+            1000.0,
+            Arc::new(Lambertian::new(Colour::new(1.0, 1.0, 1.0))),
+        )),
+        Box::new(Sphere::new(
+            Vec3::new(0.0, 2.0, 0.0),
+            2.0,
+            Arc::new(Lambertian::new(Colour::new(1.0, 1.0, 1.0))),
+        )),
         Box::new(XyRectangle::new(
             3.0,
             5.0,
@@ -218,21 +311,6 @@ fn cornell_box() -> HitableList {
             3.0,
             -2.0,
             Arc::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
-        )),
-        Box::new(Sphere::new(
-            Vec3::new(0.0, 7.0, 0.0),
-            2.0,
-            Arc::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
-        )),
-        Box::new(Sphere::new(
-            Vec3::new(0.0, -1000.0, 0.0),
-            1000.0,
-            Arc::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
-        )),
-        Box::new(Sphere::new(
-            Vec3::new(0.0, 2.0, 0.0),
-            2.0,
-            Arc::new(Lambertian::new(Colour::new(0.5, 0.5, 0.5))),
         )),
     ]);
     world

@@ -112,11 +112,11 @@ pub fn colour(r: &Ray, world: &dyn Hitable, depth: u32) -> Colour {
         }
         None => {
             //show background.
-            let unit_direction = r.direction().unit_vector();
-            let t = 0.6 * (unit_direction.y() + 1.0);
-            (1.0 - t) * Colour::new(1.0, 1.0, 1.0) + t * Colour::new(0.5, 0.7, 1.0)
+            //let unit_direction = r.direction().unit_vector();
+            //let t = 0.6 * (unit_direction.y() + 1.0);
+            //(1.0 - t) * Colour::new(1.0, 1.0, 1.0) + t * Colour::new(0.5, 0.7, 1.0)
 
-            //Colour::new(0.0, 0.0, 0.0) // make the background be solid black.
+            Colour::new(0.0, 0.0, 0.0) // make the background be solid black.
         }
     }
 }
