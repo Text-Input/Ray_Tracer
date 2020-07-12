@@ -35,21 +35,23 @@ impl Hitable for Sphere {
             let temp = (-b - discriminant.sqrt()) / a;
 
             if temp < t_max && temp > t_min {
-                return Some(HitRecord {
-                    t: temp,
-                    position: r.point_at_parameter(temp),
-                    normal: (r.point_at_parameter(temp) - self.center) / self.radius,
-                    material: &*self.material,
-                });
+                return Some(HitRecord::new(
+                    temp,
+                    r.point_at_parameter(temp),
+                    r,
+                    (r.point_at_parameter(temp) - self.center) / self.radius,
+                    &*self.material,
+                ));
             }
             let temp = (-b + discriminant.sqrt()) / a;
             if temp < t_max && temp > t_min {
-                return Some(HitRecord {
-                    t: temp,
-                    position: r.point_at_parameter(temp),
-                    normal: (r.point_at_parameter(temp) - self.center) / self.radius,
-                    material: &*self.material,
-                });
+                return Some(HitRecord::new(
+                    temp,
+                    r.point_at_parameter(temp),
+                    r,
+                    (r.point_at_parameter(temp) - self.center) / self.radius,
+                    &*self.material,
+                ));
             }
         }
         None

@@ -17,8 +17,8 @@ impl Lambertian {
 
 impl Material for Lambertian {
     fn scatter(&self, _r_in: &Ray, record: &HitRecord) -> Option<MaterialReturn> {
-        let target = record.position + record.normal + random_in_unit_sphere();
-        let scattered = Ray::new(record.position, target - record.position);
+        let scatter_direction = record.normal + random_in_unit_sphere().unit_vector();
+        let scattered = Ray::new(record.position, scatter_direction);
         let attenuation = self.albedo;
         Some(MaterialReturn::new(attenuation, scattered))
     }
