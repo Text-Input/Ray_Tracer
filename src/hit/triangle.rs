@@ -121,7 +121,7 @@ mod benches {
             Vec3::new(0.0, 1.1, 4.2),
             Vec3::new(1.0, 1.1, 5.2),
             Vec3::new(3.0, 1.1, 6.2),
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         );
 
         let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));

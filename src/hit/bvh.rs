@@ -279,6 +279,8 @@ fn compare_box_by_z_axis(left: &Box<dyn Hitable>, right: &Box<dyn Hitable>) -> O
 mod benches {
     use super::*;
 
+    use std::sync::Arc;
+
     extern crate test;
     use test::Bencher;
 
@@ -291,14 +293,14 @@ mod benches {
             Vec3::new(0.0, 1.1, 4.2),
             Vec3::new(1.0, 1.1, 5.2),
             Vec3::new(3.0, 1.1, 6.2),
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         );
 
         let triangle2 = Triangle::new(
             Vec3::new(1.0, 3.1, 4.2),
             Vec3::new(1.0, 4.1, 5.2),
             Vec3::new(3.0, 5.1, 6.2),
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         );
 
         //let bvh = BvhNode::new_sah(vec![Box::new(triangle1), Box::new(triangle2)]);

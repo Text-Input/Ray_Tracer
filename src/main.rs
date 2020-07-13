@@ -238,7 +238,7 @@ fn cornell_box() -> HitableList {
     let green: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.12, 0.45, 0.15)));
     let light: Arc<dyn Material> = Arc::new(Emission::new(Colour::new(15.0, 15.0, 15.0)));
 
-    let world = HitableList::new(vec![
+    let world: Vec<Box<dyn Hitable>> = vec![
         Box::new(FlipFace::new(YzRectangle::new(
             0.0,
             555.0,
@@ -287,8 +287,31 @@ fn cornell_box() -> HitableList {
             555.0,
             Arc::clone(&white),
         ))),
-    ]);
-    world
+        Box::new(Translate::new(
+            RotateY::new(
+                RectangularBox::new(
+                    Vec3::new(0.0, 0.0, 0.0),
+                    Vec3::new(165.0, 330.0, 165.0),
+                    Arc::clone(&white),
+                ),
+                15.0,
+            ),
+            Vec3::new(265.0, 0.0, 295.0),
+        )),
+        Box::new(Translate::new(
+            RotateY::new(
+                RectangularBox::new(
+                    Vec3::new(0.0, 0.0, 0.0),
+                    Vec3::new(165.0, 165.0, 165.0),
+                    Arc::clone(&white),
+                ),
+                -18.0,
+            ),
+            Vec3::new(130.0, 0.0, 65.0),
+        )),
+    ];
+
+    HitableList::new(world)
 }
 
 #[allow(dead_code)]

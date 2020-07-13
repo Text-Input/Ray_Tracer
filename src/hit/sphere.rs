@@ -74,12 +74,14 @@ mod benches {
 
     use crate::material::dielectric::*;
 
+    use std::sync::Arc;
+
     #[bench]
     fn hit_sphere(b: &mut Bencher) {
         let sphere = Sphere::new(
             Vec3::new(0.0, 1.1, 2.2),
             5.0,
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         );
         let ray = Ray::new(Vec3::new(0.0, 1.1, 2.2), Vec3::new(2.2, 0.0, 1.1));
 

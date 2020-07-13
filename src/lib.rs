@@ -165,6 +165,8 @@ fn ray_tracer(_py: Python, m: &PyModule) -> PyResult<()> {
 mod benches {
     use super::*;
 
+    use std::sync::Arc;
+
     extern crate test;
     use test::Bencher;
 
@@ -176,7 +178,7 @@ mod benches {
         let sphere = Sphere::new(
             Vec3::new(0.0, 3.0, 0.0),
             1.0,
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         );
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0));
 
@@ -190,7 +192,7 @@ mod benches {
         let bvh = BvhNode::new(vec![Box::new(Sphere::new(
             Vec3::new(0.0, 3.0, 0.0),
             1.0,
-            Box::new(Dielectric::new(1.35)),
+            Arc::new(Dielectric::new(1.35)),
         ))]);
 
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0));
