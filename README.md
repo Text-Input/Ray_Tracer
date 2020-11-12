@@ -4,4 +4,14 @@
 
 Based off of the book series "Ray Tracing: In One Weekend". 
 
-All chapters of the first book in the series have been completed, and support for triangle-based things has been added. 
+All chapters of the first book in the series have been completed, and support for triangle-based objects has been added. 
+Further, fogs of constant densities have also been implemented. 
+BVH building with a surface area heuristic has also been added, as a performance speedup.
+
+Multithreaded rendering is accomplished using Rayon. 
+
+
+Python bindings have been added using PyO3. This, however, seems to have broken building
+the binary on linux (or at least WSL), though the raytracing lib seems to still build properly.
+
+For the time being, the entire project is confirmed to build correctly on Windows 10. 
