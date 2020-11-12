@@ -15,6 +15,7 @@ use ray_tracer::camera::*;
 use ray_tracer::colour::*;
 use ray_tracer::vec3::*;
 
+use ray_tracer::hit::constant_medium::*;
 use ray_tracer::hit::hitable_list::*;
 use ray_tracer::hit::instancing::*;
 use ray_tracer::hit::rectangle::*;
@@ -30,13 +31,13 @@ use ray_tracer::material::metal::*;
 use std::time::Instant;
 
 fn main() {
-    let width = 500;
-    let height = 500;
+    let width = 500*4;
+    let height = 500*4;
 
     //let width = 1920;
     //let height = 1080;
 
-    let samples = 200 * 8;
+    let samples = 500 ;
     let _seed: u64 = 0;
 
     let lookfrom = Vec3::new(13.0, 2.0, 3.0);
@@ -68,7 +69,7 @@ fn main() {
         dist_to_focus,
     );
 
-    //let mut rng = SmallRng::seed_from_u64(_seed);
+    let mut rng = SmallRng::seed_from_u64(_seed);
     //let scene = random_scene(&mut rng);
     //let scene = static_scene();
     let scene = cornell_box();
@@ -110,6 +111,7 @@ fn main() {
     );
 }
 
+#[allow(dead_code)]
 fn random_scene(rng: &mut SmallRng) -> HitableList {
     let mut objs: Vec<Box<dyn Hitable>> = vec![];
 
@@ -194,7 +196,7 @@ fn random_scene(rng: &mut SmallRng) -> HitableList {
 
 #[allow(dead_code)]
 fn static_scene() -> HitableList {
-    let world = HitableList::new(vec![
+    HitableList::new(vec![
         Box::new(Sphere::new(
             Vec3::new(0.0, 0.0, -1.0),
             0.5,
@@ -225,8 +227,7 @@ fn static_scene() -> HitableList {
             0.5,
             Arc::new(Emission::new(Colour::new(1.0, 1.0, 1.0))),
         )),
-    ]);
-    world
+    ])
 }
 
 #[allow(dead_code)]
@@ -236,7 +237,7 @@ fn cornell_box() -> HitableList {
     let red: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.65, 0.05, 0.05)));
     let white: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.73, 0.73, 0.73)));
     let green: Arc<dyn Material> = Arc::new(Lambertian::new(Colour::new(0.12, 0.45, 0.15)));
-    let light: Arc<dyn Material> = Arc::new(Emission::new(Colour::new(15.0, 15.0, 15.0)));
+    let light: Arc<dyn Material> = Arc::new(Emission::new(Colour::new(7.0, 7.0, 7.0)));
 
     let world: Vec<Box<dyn Hitable>> = vec![
         Box::new(FlipFace::new(YzRectangle::new(
@@ -256,10 +257,10 @@ fn cornell_box() -> HitableList {
             Arc::clone(&red),
         )),
         Box::new(XzRectangle::new(
-            213.0,
-            343.0,
-            227.0,
-            332.0,
+            113.0,
+            443.0,
+            127.0,
+            432.0,
             554.0,
             Arc::clone(&light),
         )),
@@ -287,7 +288,7 @@ fn cornell_box() -> HitableList {
             555.0,
             Arc::clone(&white),
         ))),
-        Box::new(Translate::new(
+        /*Box::new(Translate::new(
             RotateY::new(
                 RectangularBox::new(
                     Vec3::new(0.0, 0.0, 0.0),
@@ -308,6 +309,36 @@ fn cornell_box() -> HitableList {
                 -18.0,
             ),
             Vec3::new(130.0, 0.0, 65.0),
+        )),*/
+        Box::new(ConstantMedium::new(
+            Box::new(Translate::new(
+                RotateY::new(
+                    RectangularBox::new(
+                        Vec3::new(0.0, 0.0, 0.0),
+                        Vec3::new(165.0, 330.0, 165.0),
+                        Arc::clone(&white),
+                    ),
+                    15.0,
+                ),
+                Vec3::new(265.0, 0.0, 295.0),
+            )),
+            0.01,
+            Colour::new(0.0, 0.0, 0.0),
+        )),
+        Box::new(ConstantMedium::new(
+            Box::new(Translate::new(
+                RotateY::new(
+                    RectangularBox::new(
+                        Vec3::new(0.0, 0.0, 0.0),
+                        Vec3::new(165.0, 165.0, 165.0),
+                        Arc::clone(&white),
+                    ),
+                    -18.0,
+                ),
+                Vec3::new(130.0, 0.0, 65.0),
+            )),
+            0.01,
+            Colour::new(1.0, 1.0, 1.0),
         )),
     ];
 
@@ -316,7 +347,7 @@ fn cornell_box() -> HitableList {
 
 #[allow(dead_code)]
 fn simple_light() -> HitableList {
-    let world = HitableList::new(vec![
+    HitableList::new(vec![
         Box::new(Sphere::new(
             Vec3::new(0.0, -1000.0, 0.0),
             1000.0,
@@ -335,6 +366,5 @@ fn simple_light() -> HitableList {
             -2.0,
             Arc::new(Emission::new(Colour::new(4.0, 4.0, 4.0))),
         )),
-    ]);
-    world
+    ])
 }

@@ -1,5 +1,6 @@
 pub mod dielectric;
 pub mod emission;
+pub mod isotropic;
 pub mod lambertian;
 pub mod metal;
 

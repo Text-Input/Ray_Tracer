@@ -1,4 +1,5 @@
 pub mod bvh;
+pub mod constant_medium;
 pub mod hitable_list;
 pub mod instancing;
 pub mod rectangle;

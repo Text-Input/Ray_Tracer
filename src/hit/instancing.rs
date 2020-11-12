@@ -48,12 +48,17 @@ impl<T: Hitable> Translate<T> {
 
 impl<T: Hitable> Hitable for Translate<T> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        
-		let moved_r = Ray::new(r.origin() - self.offset, r.direction());
+        let moved_r = Ray::new(r.origin() - self.offset, r.direction());
 
-        self.obj
-            .hit(&moved_r, t_min, t_max)
-            .map(|rec| HitRecord::new(rec.t, rec.position+self.offset, &moved_r, rec.normal, rec.material))
+        self.obj.hit(&moved_r, t_min, t_max).map(|rec| {
+            HitRecord::new(
+                rec.t,
+                rec.position + self.offset,
+                &moved_r,
+                rec.normal,
+                rec.material,
+            )
+        })
     }
 
     fn bounding_box(&self) -> Option<AABB> {

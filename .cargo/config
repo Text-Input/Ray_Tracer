@@ -1,5 +1,7 @@
 [build]
-rustflags = "-C target-cpu=native"
+#rustflags = "-C target-cpu=native "
+rustflags = "-C target-feature=+avx2,+sse3"
 
 [profile.release]
-debug = true
+#debug = true
+lto = "thin"

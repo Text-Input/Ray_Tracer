@@ -1,4 +1,4 @@
-#![feature(test)]
+//#![feature(test)]
 
 //extern crate hello;
 extern crate rand;
@@ -57,14 +57,14 @@ pub fn render(
         .map(|i| {
             let x = i % width;
             let y = i / width;
-
+			
             pixel(width, height, x, y, &cam, &world, samples)
             //pixel
         })
         .collect();
 
     println!("Done raytracing, finishing up!");
-
+	
     buf
 }
 
